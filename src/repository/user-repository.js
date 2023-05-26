@@ -30,6 +30,16 @@ class UserRepository {
       throw { error };
     }
   }
+
+  async getAllUsers() {
+    try {
+      const user = await User.find({});
+      return user;
+    } catch (error) {
+      console.log("something wrong in repository layer");
+      throw { error };
+    }
+  }
 }
 
 export default UserRepository;

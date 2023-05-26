@@ -3,10 +3,11 @@ import { PORT } from "./config/serverConfig.js";
 import { connect } from "./config/database.js";
 import bodyParser from "body-parser";
 import apiRoutes from "./routes/index.js";
-
+import cors from "cors";
 const app = express();
 
 const setupAndStartServer = async () => {
+  app.use(cors());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use("/api", apiRoutes);

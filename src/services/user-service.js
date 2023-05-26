@@ -55,6 +55,16 @@ class UserService {
     }
   }
 
+  async getAllUsers() {
+    try {
+      const users = await this.userRepository.getAllUsers();
+      return users;
+    } catch (error) {
+      console.log("something wrong in signing in service layer");
+      throw { error };
+    }
+  }
+
   async verifyToken(token) {
     try {
       const response = jwt.verify(token, JWT_KEY);
