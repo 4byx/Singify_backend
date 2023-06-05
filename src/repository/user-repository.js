@@ -1,4 +1,5 @@
 import { User } from "../model/user.js";
+import UserService from "../services/user-service.js";
 
 class UserRepository {
   async create(data) {
@@ -24,6 +25,16 @@ class UserRepository {
       const user = await User.findOne({
         username,
       });
+      return user;
+    } catch (error) {
+      console.log("something wrong in repository layer");
+      throw { error };
+    }
+  }
+  async getById(userId) {
+    try {
+      console.log(userId);
+      const user = await User.findById(userId);
       return user;
     } catch (error) {
       console.log("something wrong in repository layer");

@@ -33,7 +33,14 @@ export const signIn = async (req, res) => {
       password: req.body.password,
     };
     const response = await userService.signin(data);
-    return res.status(201).json({
+    console.log("response from sign in \n", response);
+    // console.log(response);
+    res.cookie("jwttoken", response, {
+      // expires: new  Date(Date.now() + 25892000000),
+      httpOnly: true,
+    });
+    // console.log(res.cookie());
+    res.status(201).json({
       Success: true,
       data: response,
       message: "successfully signed in a user",
@@ -63,6 +70,26 @@ export const getAll = async (req, res) => {
       Success: false,
       data: [],
       message: "failed to fetch all the users",
+      err: error,
+    });
+  }
+};
+
+export const isAuthenticated = async (req, res) => {
+  try {
+    console.log("cookies in auth \n", req.cookies);
+    const response = await userService.isAuthenticated(req.cookies.jwttoken);
+    return res.status(200).json({
+      Success: true,
+      data: response,
+      message: "User is authenticated",
+      err: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      Success: false,
+      data: [],
+      message: "user is not authenticated",
       err: error,
     });
   }

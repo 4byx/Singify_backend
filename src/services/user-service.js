@@ -30,9 +30,11 @@ class UserService {
   async signin(data) {
     try {
       const { username, password } = data;
+      // console.log(data);
       // check details using given username
       const user = await this.userRepository.getByUsername(username);
       // check if the user is present in the database or not
+      // console.log(user);
       if (!user) {
         console.log("user not present");
         throw { error: "user not present" };
@@ -51,6 +53,24 @@ class UserService {
       // create token and return token
     } catch (error) {
       console.log("something wrong in signing in service layer");
+      throw { error };
+    }
+  }
+
+  async isAuthenticated(token) {
+    try {
+      const response = await this.verifyToken(token);
+      if (!response) {
+        throw { error: "Invalid token" };
+      }
+      console.log(response);
+      const user = await this.userRepository.getByUsername(response.username);
+      if (!user) {
+        throw { error: "No such user find in database" };
+      }
+      return user;
+    } catch (error) {
+      console.log("something wrong in authencating user in service layer");
       throw { error };
     }
   }
@@ -77,7 +97,7 @@ class UserService {
 
   async createToken(user) {
     try {
-      const token = jwt.sign(user, JWT_KEY, { expiresIn: "1d" });
+      const token = jwt.sign(user, JWT_KEY, { expiresIn: "2h" });
       return token;
     } catch (error) {
       console.log("something wrong in creating token", error);
